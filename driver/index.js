@@ -29,29 +29,31 @@ const params = {
  WaitTimeSeconds: 0
 };
 
-sqs.receiveMessage(params, function(err, data) {
-  if (err) {
-    console.log("Receive Error", err);
-  } else if (data.Messages) {
-    let receivedMessage = data.Messages[0];
-    console.log('\n ================= Received Message: ================= \n', receivedMessage);
-    publishDelivered(receivedMessage);
-
-    const deleteParams = {
-      QueueUrl: queueURL,
-      ReceiptHandle: data.Messages[0].ReceiptHandle
-    };
-    sqs.deleteMessage(deleteParams, function(err, data) {
-      if (err) {
-        console.log("Delete Error", err);
-      } else {
-        console.log("\n ===== Message Deleted: ===== \n", data.ResponseMetadata);
-      }
-    });
-  } else {
-    console.log('\n |=== No messages currently in queue ===| \n');
-  }
-});
+function delivery(){
+  sqs.receiveMessage(params, function(err, data) {
+    if (err) {
+      console.log("Receive Error", err);
+    } else if (data.Messages) {
+      let receivedMessage = data.Messages[0];
+      console.log('\n ================= Received Message: ================= \n', receivedMessage);
+      publishDelivered(receivedMessage);
+  
+      const deleteParams = {
+        QueueUrl: queueURL,
+        ReceiptHandle: data.Messages[0].ReceiptHandle
+      };
+      sqs.deleteMessage(deleteParams, function(err, data) {
+        if (err) {
+          console.log("Delete Error", err);
+        } else {
+          console.log("\n ===== Message Deleted: ===== \n", data.ResponseMetadata);
+        }
+      });
+    } else {
+      console.log('\n |=== No messages currently in queue ===| \n');
+    }
+  });
+}
 
 // ================================== SNS =================================
 
@@ -59,7 +61,7 @@ sqs.receiveMessage(params, function(err, data) {
 // Publishes received package to vendors delivered queue
 async function publishDelivered(message){
   console.log('\n ================= Published Delivered: ================= \n');
-  
+
   const params = {
     QueueUrl: JSON.parse(message.Body).vendor,
     MessageBody: JSON.stringify(message),
@@ -76,3 +78,6 @@ async function publishDelivered(message){
 
 
 // https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/javascript/example_code/sqs/sqs_receivemessage.js
+
+
+module.exports = {delivery};
