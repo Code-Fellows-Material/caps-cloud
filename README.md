@@ -5,9 +5,16 @@
 
 ## Description:
 
- A cloud enabled recreation of the Code Fellows "CAPS" system Using AWS Services: SQS, SNS, Lambda. 
+ A cloud enabled recreation of the Code Fellows "CAPS" system Using AWS Services: SQS, SNS, Lambda. Caps system imitates a vendor/delivery service tracking packages from the creation of a pick up request through to delivery of the package and confirmation of delivery to the vendor. 
 
+ ## Technologies Used: 
 
+ - Node.js
+ - AWS SQS
+ - AWS SNS
+ - aws-sdk
+ - nanoid
+  
 ## UML:
 
   ![UML](./whiteboard.jpg)
@@ -16,7 +23,6 @@
 ## Console Log: 
 
   ![Console](./Console_Image.JPG)
-
 
 ## Resources:
 
